@@ -20,10 +20,21 @@ while True:
 
 
     delta_frame = cv2.absdiff(first_frame, gray_frame)               #comparing first frame with remaining frames
-    
     thresh_frame = cv2.threshold(delta_frame, 100,255,cv2.THRESH_BINARY)[1]#adding a threshold frame
-
     thresh_frame = cv2.dilate(thresh_frame, None, iterations=2)           #smoothening the threshold frame
+
+    (cnts,_) = cv2.findContours(thresh_frame.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  #finding cotours by passing copy of thresh frame
+    #external contours are taken, and approximation method by opencv for applying it.
+
+    
+    for contour in cnts:
+        if cv2.contourArea(contour) < 1000:                              #checking if area of contour is less than 1000, true=loop again, false=execute next lines
+            continue
+        (x,y,w,h) = cv2.boundingRect(contour)                            #drawing rectangle on the moving object
+        cv2.rectangle(frame, (x,y),(x+w, y+h),(0,255,0),3)               #assinging positions and colors
+
+
+
 
     cv2.imshow("gray frame", gray_frame)                             #showing gray frames
 
@@ -31,6 +42,7 @@ while True:
 
     cv2.imshow("thresh frame",thresh_frame)
 
+    cv2.imshow("Color Frame", frame)
 
     key = cv2.waitKey(1) 
 
