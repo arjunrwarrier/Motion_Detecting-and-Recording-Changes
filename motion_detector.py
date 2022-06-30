@@ -2,7 +2,7 @@ import  cv2
 
 video = cv2.VideoCapture(0, cv2.CAP_DSHOW)                          #capture video
 
-first_frame = None
+first_frame = None                                                  #assigning None to first_frame
 
 while True:
     check, frame = video.read()                                     #reading video to frame in loop
