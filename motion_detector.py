@@ -10,6 +10,8 @@ time.sleep(1)
 while True:
     check, frame = video.read()                                     #reading video to frame in loop
 
+    status = 0                                                      # motion detection status status
+
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)            #converting to gray for detection easiness
 
     gray_frame = cv2.GaussianBlur(gray_frame, (21,21),0)            #making the image blur for reducing noise
@@ -28,8 +30,9 @@ while True:
 
     
     for contour in cnts:
-        if cv2.contourArea(contour) < 1000:                              #checking if area of contour is less than 1000, true=loop again, false=execute next lines
+        if cv2.contourArea(contour) < 10000:                              #checking if area of contour is less than 1000, true=loop again, false=execute next lines
             continue
+        status =1                                                        #changing status
         (x,y,w,h) = cv2.boundingRect(contour)                            #drawing rectangle on the moving object
         cv2.rectangle(frame, (x,y),(x+w, y+h),(0,255,0),3)               #assinging positions and colors
 
@@ -46,12 +49,12 @@ while True:
 
     key = cv2.waitKey(1) 
 
-    print(gray_frame)                                                 #print numpy array
+    
 
     if key==ord('q'):                                                 #if q is pressed break the loop
         break
 
-
+    print(status)
 
 
 video.release()  
